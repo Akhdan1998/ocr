@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815437122108",
+    "project_id": "optical-character-recogn-b80c0",
+    "storage_bucket": "optical-character-recogn-b80c0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815437122108:android:dde1a8c662484c4d0e9139",
+        "android_client_info": {
+          "package_name": "com.kolink.ocr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5rLX7R0qd2E4XBh8n7HCbMtdibNDtAmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
