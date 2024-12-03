@@ -28,9 +28,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:barcode_widget/barcode_widget.dart' as barcode_widget;
+import 'package:translator/translator.dart';
 import 'package:uuid/uuid.dart';
-
-import 'main.dart';
 
 part 'widgets/teks.dart';
 part 'widgets/toast.dart';
@@ -41,6 +40,7 @@ part 'pages/beranda.dart';
 part 'pages/file_saya.dart';
 part 'pages/detail_ocr.dart';
 part 'pages/tindakan.dart';
+part 'pages/translate.dart';
 part 'pages/pengaturan.dart';
 part 'pages/ocr.dart';
 part 'pages/qrcode.dart';

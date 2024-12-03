@@ -77,6 +77,10 @@ class _SplashScreenState extends State<SplashScreen> {
       _navigateToHomePage();
     } catch (e) {
       print("Gagal login anonim: $e");
+      _showErrorDialog(
+        "Oops, there's a problem!",
+        "We cannot connect you anonymously. Make sure your internet connection is stable, then try again.",
+      );
     }
   }
 
@@ -87,6 +91,67 @@ class _SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     });
+  }
+
+  void _showErrorDialog(String title, String message) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: StyleText(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  message,
+                  style: StyleText(fontSize: 16, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _loginAnonymously();
+                  },
+                  child: Text(
+                    "Try Again",
+                    style: StyleText(
+                      color: '07489E'.toColor(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: animation,
+            child: child,
+          ),
+        );
+      },
+    );
   }
 
   @override
