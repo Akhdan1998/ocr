@@ -65,23 +65,66 @@ class _TindakanState extends State<Tindakan> {
       textBlocks.length > 2 ? textBlocks.sublist(2).join('\n') : '';
       final formattedText = "$title\n$subtitle\n\n$otherText".trim();
 
-      if (context.mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ScanTranslateScreen(
-              imagePath: imageFile.path,
-              ocrText: formattedText,
-            ),
-          ),
-        );
-      }
+      // if (context.mounted) {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => ScanTranslateScreen(
+      //         imagePath: imageFile.path,
+      //         ocrText: formattedText,
+      //       ),
+      //     ),
+      //   );
+      // }
+      _showLanguageSelectionDialog(context, imageFile.path, formattedText);
     } catch (e, stacktrace) {
       print("Terjadi kesalahan saat memproses gambar: $e");
       print("Terjadi kesalahan saat memproses gambar: $stacktrace");
     } finally {
       context.loaderOverlay.hide();
     }
+  }
+
+  Future<void> _showLanguageSelectionDialog(
+      BuildContext context, String imagePath, String ocrText) async {
+    showBottomSheet(
+        elevation: 0,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 3,
+                  offset: Offset(0, 0),
+                ),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: Text("English"),
+                ),
+                Divider(height: 1),
+                TextButton(
+                  onPressed: () {},
+                  child: Text("Korean"),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   @override
