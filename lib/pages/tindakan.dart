@@ -57,12 +57,12 @@ class _TindakanState extends State<Tindakan> {
       final recognizedText = await textRecognizer.processImage(inputImage);
 
       final List<String> textBlocks =
-      recognizedText.blocks.map((block) => block.text.trim()).toList();
+          recognizedText.blocks.map((block) => block.text.trim()).toList();
 
       final title = textBlocks.isNotEmpty ? textBlocks.first : '';
       final subtitle = textBlocks.length > 1 ? textBlocks[1] : '';
       final otherText =
-      textBlocks.length > 2 ? textBlocks.sublist(2).join('\n') : '';
+          textBlocks.length > 2 ? textBlocks.sublist(2).join('\n') : '';
       final formattedText = "$title\n$subtitle\n\n$otherText".trim();
 
       // if (context.mounted) {
@@ -85,46 +85,143 @@ class _TindakanState extends State<Tindakan> {
     }
   }
 
+  // Future<void> _showLanguageSelectionDialog(
+  //     BuildContext context, String imagePath, String ocrText) async {
+  //   final translator = GoogleTranslator();
+  //   showBottomSheet(
+  //       elevation: 0,
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Container(
+  //           width: MediaQuery.of(context).size.width,
+  //           padding: EdgeInsets.all(16),
+  //           decoration: BoxDecoration(
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 color: Colors.grey.withOpacity(0.5),
+  //                 spreadRadius: 2,
+  //                 blurRadius: 3,
+  //                 offset: Offset(0, 0),
+  //               ),
+  //             ],
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.only(
+  //               topRight: Radius.circular(30),
+  //               topLeft: Radius.circular(30),
+  //             ),
+  //           ),
+  //           child: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               TextButton(
+  //                 onPressed: () async {
+  //                   context.loaderOverlay.show();
+  //                   await _translateAndPrint(
+  //                           translator, ocrText, 'en', imagePath)
+  //                       .whenComplete(() {
+  //                     Navigator.pop(context);
+  //                   });
+  //                 },
+  //                 child: Text("English", style: StyleText(),),
+  //               ),
+  //               Divider(height: 1),
+  //               TextButton(
+  //                 onPressed: () async {
+  //                   context.loaderOverlay.show();
+  //                   await _translateAndPrint(
+  //                           translator, ocrText, 'ko', imagePath)
+  //                       .whenComplete(() {
+  //                     Navigator.pop(context);
+  //                   });
+  //                 },
+  //                 child: Text(
+  //                   "Korean",
+  //                   style: StyleText(),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
+  //
+  // Future<void> _translateAndPrint(
+  //     GoogleTranslator translator, String text, String targetLanguage, String imagePath) async {
+  //   try {
+  //     final translation = await translator.translate(text, to: targetLanguage);
+  //     print('Translated Text ($targetLanguage): ${translation.text}');
+  //     Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => ScanTranslateScreen(
+  //               imagePath: imagePath,
+  //               ocrText: translation.text,
+  //             ),
+  //           ),
+  //         );
+  //   } catch (e) {
+  //     print('Error during translation: $e');
+  //   } finally {
+  //     context.loaderOverlay.hide();
+  //   }
+  // }
+
   Future<void> _showLanguageSelectionDialog(
       BuildContext context, String imagePath, String ocrText) async {
-    showBottomSheet(
-        elevation: 0,
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 3,
-                  offset: Offset(0, 0),
-                ),
-              ],
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(30),
-                topLeft: Radius.circular(30),
-              ),
+    final translator = GoogleTranslator();
+
+    Future<void> _handleTranslation(String targetLanguage) async {
+      try {
+        context.loaderOverlay.show();
+        final translation =
+            await translator.translate(ocrText, to: targetLanguage);
+        print('Translated Text ($targetLanguage): ${translation.text}');
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OcrResultScreen(
+              imagePath: imagePath,
+              ocrText: translation.text,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text("English"),
-                ),
-                Divider(height: 1),
-                TextButton(
-                  onPressed: () {},
-                  child: Text("Korean"),
-                ),
-              ],
-            ),
-          );
-        });
+          ),
+        );
+      } catch (e) {
+        print('Error during translation: $e');
+      } finally {
+        context.loaderOverlay.hide();
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageButton(
+                  context, "English", () => _handleTranslation('en')),
+              Divider(),
+              _buildLanguageButton(
+                  context, "Korean", () => _handleTranslation('ko')),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageButton(
+      BuildContext context, String language, VoidCallback onPressed) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Text(language, style: StyleText(fontSize: 16)),
+    );
   }
 
   @override
@@ -144,13 +241,13 @@ class _TindakanState extends State<Tindakan> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
+      body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Scan',
+              'Scan Options',
               style: StyleText(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -159,19 +256,17 @@ class _TindakanState extends State<Tindakan> {
             SizedBox(height: 10),
             _ActionCard(
               title: 'Document',
-              subtitle: 'Scan Documents',
+              subtitle: 'Digitize your physical documents',
               imagePath: 'assets/pindai.png',
-              imageScale: 30,
               onTap: () {
                 widget.popupMenuKey.currentState?.showButtonMenu();
               },
             ),
             SizedBox(height: 10),
             _ActionCard(
-              title: 'QR Code',
-              subtitle: 'Read QR code',
+              title: 'QR Code Scanner',
+              subtitle: 'Scan and read QR codes',
               imagePath: 'assets/barcode.png',
-              imageScale: 60,
               onTap: () async {
                 final scannedCode = await Navigator.push(
                   context,
@@ -193,42 +288,12 @@ class _TindakanState extends State<Tindakan> {
               },
             ),
             SizedBox(height: 10),
-            // Slidable(
-            //   startActionPane: ActionPane(motion: ScrollMotion(), children: [
-            //     SlidableAction(
-            //       borderRadius: BorderRadius.circular(10),
-            //       onPressed: (context) => _getImage(ImageSource.gallery),
-            //       backgroundColor: '07489E'.toColor().withOpacity(0.2),
-            //       foregroundColor: '07489E'.toColor(),
-            //       icon: Icons.photo_library,
-            //       label: 'Gallery',
-            //       // spacing: 4,
-            //     ),
-            //     SlidableAction(
-            //       borderRadius: BorderRadius.circular(10),
-            //       onPressed: (context) => _getImage(ImageSource.camera),
-            //       backgroundColor: '07489E'.toColor().withOpacity(0.2),
-            //       foregroundColor: '07489E'.toColor(),
-            //       icon: Icons.camera_alt,
-            //       label: 'Camera',
-            //       // spacing: 4,
-            //     ),
-            //   ]),
-            //   child: _ActionCard(
-            //     title: 'Document Translate',
-            //     subtitle: 'Scan Documents Translate',
-            //     imagePath: 'assets/pindai.png',
-            //     imageScale: 30,
-            //     onTap: () {},
-            //   ),
-            // ),
             Column(
               children: [
                 _ActionCard(
-                  title: 'Document Translate',
-                  subtitle: 'Scan Documents Translate',
-                  imagePath: 'assets/pindai.png',
-                  imageScale: 30,
+                  title: 'Document Translation',
+                  subtitle: 'Translate scanned documents',
+                  imagePath: 'assets/docs.png',
                   onTap: () {
                     setState(() {
                       isSlidable = !isSlidable;
@@ -282,6 +347,8 @@ class _TindakanState extends State<Tindakan> {
                                   borderRadius: BorderRadius.circular(10),
                                   color: '07489E'.toColor().withOpacity(0.2),
                                 ),
+                                width: 185,
+                                height: 54,
                                 child: Column(
                                   children: [
                                     Icon(
@@ -297,8 +364,6 @@ class _TindakanState extends State<Tindakan> {
                                     ),
                                   ],
                                 ),
-                                width: 185,
-                                height: 54,
                               ),
                             ),
                           ],
@@ -318,14 +383,12 @@ class _ActionCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String imagePath;
-  final double imageScale;
   final VoidCallback onTap;
 
   _ActionCard({
     required this.title,
     required this.subtitle,
     required this.imagePath,
-    this.imageScale = 1.0,
     required this.onTap,
   });
 
@@ -347,9 +410,12 @@ class _ActionCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  imagePath,
-                  scale: imageScale,
+                Container(
+                  width: 60,
+                  child: Image.asset(
+                    fit: BoxFit.cover,
+                    imagePath,
+                  ),
                 ),
                 SizedBox(width: 10),
                 Column(

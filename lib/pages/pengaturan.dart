@@ -56,85 +56,65 @@ class _PengaturanState extends State<Pengaturan> {
         padding: EdgeInsets.only(top: 20, left: 20, right: 20),
         child: Column(
           children: [
-            Container(
-              padding:
-                  EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: '07489E'.toColor().withOpacity(0.2),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Trash Folder',
-                        style: StyleText(
-                          color: '07489E'.toColor(),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        'Documents that have been deleted.',
-                        style: StyleText(
-                          color: '07489E'.toColor(),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: '07489E'.toColor(),
-                  ),
-                ],
-              ),
+            _buildMenuItem(
+              title: 'Trash Folder',
+              subtitle: 'Documents that have been deleted.',
+              icon: Icons.arrow_forward_ios,
+              onTap: () {},
             ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                logout(context);
-              },
-              child: Container(
-                padding:
-                    EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: '07489E'.toColor().withOpacity(0.2),
+            const SizedBox(height: 10),
+            _buildMenuItem(
+              title: 'Logout',
+              subtitle: 'Exit this application.',
+              icon: Icons.logout,
+              onTap: () => logout(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildMenuItem({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: '07489E'.toColor().withOpacity(0.2),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: StyleText(
+                    color: '07489E'.toColor(),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Logout',
-                          style: StyleText(
-                            color: '07489E'.toColor(),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
-                        ),
-                        Text(
-                          'Exit this application.',
-                          style: StyleText(
-                            color: '07489E'.toColor(),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Icon(
-                      Icons.logout,
-                      color: '07489E'.toColor(),
-                    ),
-                  ],
+                SizedBox(height: 5),
+                Text(
+                  subtitle,
+                  style: StyleText(
+                    color: '07489E'.toColor(),
+                    fontSize: 12,
+                  ),
                 ),
-              ),
+              ],
+            ),
+            Icon(
+              icon,
+              color: '07489E'.toColor(),
             ),
           ],
         ),
