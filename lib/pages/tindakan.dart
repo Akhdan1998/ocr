@@ -257,7 +257,7 @@ class _TindakanState extends State<Tindakan> {
             _ActionCard(
               title: 'Document',
               subtitle: 'Digitize your physical documents',
-              imagePath: 'assets/pindai.png',
+              icon: Icons.description,
               onTap: () {
                 widget.popupMenuKey.currentState?.showButtonMenu();
               },
@@ -266,7 +266,7 @@ class _TindakanState extends State<Tindakan> {
             _ActionCard(
               title: 'QR Code Scanner',
               subtitle: 'Scan and read QR codes',
-              imagePath: 'assets/barcode.png',
+              icon: Icons.qr_code_scanner,
               onTap: () async {
                 final scannedCode = await Navigator.push(
                   context,
@@ -293,7 +293,7 @@ class _TindakanState extends State<Tindakan> {
                 _ActionCard(
                   title: 'Document Translation',
                   subtitle: 'Translate scanned documents',
-                  imagePath: 'assets/docs.png',
+                  icon: Icons.translate,
                   onTap: () {
                     setState(() {
                       isSlidable = !isSlidable;
@@ -382,13 +382,13 @@ class _TindakanState extends State<Tindakan> {
 class _ActionCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final String imagePath;
+  final IconData icon;
   final VoidCallback onTap;
 
   _ActionCard({
     required this.title,
     required this.subtitle,
-    required this.imagePath,
+    required this.icon,
     required this.onTap,
   });
 
@@ -410,13 +410,7 @@ class _ActionCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: 60,
-                  child: Image.asset(
-                    fit: BoxFit.cover,
-                    imagePath,
-                  ),
-                ),
+                Icon(icon, size: 40, color: '07489E'.toColor()),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
